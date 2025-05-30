@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Markdown Viewer - Dark + Code Highlighting</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js"></script>
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: #d4d4d4;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    #content {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    pre {
+      background-color: #2d2d2d;
+      border-radius: 6px;
+      padding: 15px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      font-size: 14px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #3c3c3c;
+      margin: 30px 0;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: #ffffff;
+    }
+
+    a {
+      color: #4ea1ff;
+    }
+
+    strong {
+      color: #ffffff;
+    }
+        .custom-cursor {
+
+position: fixed !important;
+pointer-events: none !important;
+z-index: 9999 !important;
+height: 70px !important; /* Adjust the height as needed */
+}
+  </style>
+</head>
+<body>
+
+<div id="content"></div>
+    <script>
+        window.onload = function() {
+            
+       
+                   var cursor = document.createElement('img');
+                   cursor.src = 'https://i.gifer.com/1V94.gif';
+                   cursor.classList.add('custom-cursor');
+             
+             // Add cursor to the document
+             document.body.appendChild(cursor);
+             
+             // Adjust cursor position based on mouse movement
+             document.addEventListener('mousemove', function(e) {
+               console.log(1)
+               var cursorOffsetX = cursor.width / 2;
+               var cursorOffsetY = cursor.height / 2;
+               cursor.style.left = (e.clientX - cursorOffsetX) + 'px';
+               cursor.style.top = (e.clientY - cursorOffsetY) + 'px';
+             }); }
+       
+           </script>
+<script>
+  const markdownContent = `
+  ---
+
+# 🧠 **Lecture 1: MySQL Basics –  Notes**
+
+---
+
+## 📌 **1. What is MySQL?**
+
+> MySQL is a **Relational Database Management System (RDBMS)** that helps store, manage, and retrieve data in structured form.
+
+* Uses **SQL (Structured Query Language)**.
+* Open-source, fast, and widely used.
+
+---
+
+## 📂 **2. Basic Terms**
+
+| Term             | Meaning                                                          |
+| ---------------- | ---------------------------------------------------------------- |
+| **Database**     | A collection of related tables (like a folder for storing data). |
+| **Table**        | Stores data in rows and columns (like an Excel sheet).           |
+| **Row (Record)** | A single entry of data in a table.                               |
+| **Column**       | A field in the table (like name, age, etc.).                     |
+| **Schema**       | In MySQL, schema = database.                                     |
+| **Primary Key**  | A unique identifier for each row (like student\_id).             |
+
+---
+
+## 🛠️ **3. Creating Your First Database**
+
+\`\`\`sql
+CREATE DATABASE college;
+USE college;
+\`\`\`
+
+---
+
+## 🗂️ **4. Creating a Table**
+
+\`\`\`sql
+CREATE TABLE student (
+  name VARCHAR(100),
+  course VARCHAR(50)
+);
+\`\`\`
+
+**Explanation:**
+* \`INT\`: Integer (whole number).
+* \`VARCHAR(100)\`: Text up to 100 characters.
+
+---
+
+## 🧾 **5. Inserting Data**
+
+\`\`\`sql
+INSERT INTO student (student_id, name, course)
+VALUES ('Om Kore', 'BCA');
+\`\`\`
+
+Insert multiple records:
+
+\`\`\`sql
+INSERT INTO student (name, course)
+VALUES
+('Amit Yadav', 'BBA'),
+('Sana Shaikh', 'BCA');
+\`\`\`
+
+---
+
+## 🔍 **6. Viewing Data**
+
+\`\`\`sql
+SELECT * FROM student;
+\`\`\`
+
+View specific columns:
+
+\`\`\`sql
+SELECT name, course FROM student;
+\`\`\`
+
+---
+
+## 🧠 **7. Basic Data Types (For Beginners)**
+
+| Data Type    | Use                                  |
+| ------------ | ------------------------------------ |
+| \`INT\`        | Whole numbers (1, 99, -5)            |
+| \`VARCHAR(n)\` | Text (names, emails) – max \`n\` chars |
+| \`DATE\`       | Dates (e.g., '2024-05-30')           |
+| \`FLOAT\`      | Decimal numbers (3.14, 99.9)         |
+
+
+## 📘 **9. Case Sensitivity (Quick Tip)**
+
+* SQL keywords: **NOT case-sensitive**
+  ✅ \`SELECT\` = \`select\` = \`SeLeCt\`
+
+* Table/Column names: 
+  ✅ Safe to write consistently lowercase.
+
+---
+
+## 📝 **10. Assignment Tasks (for Students)**
+
+### 🔸 Create a Database and Table
+
+1. Create a database named \`library\`.
+2. Create a table \`books\` with these columns:
+
+   * \`title\` (VARCHAR(100))
+   * \`author\` (VARCHAR(50))
+
+---
+
+### 🔸 Insert Data
+
+Add at least **3 books** to your \`books\` table.
+
+---
+
+### 🔸 View Data
+
+Use these queries:
+
+* View all records.
+* View only \`title\` and \`author\`.
+* View books published after \`'2020-01-01'\`.
+
+---
+
+
+  `;
+
+  // Render and highlight
+  const html = marked.parse(markdownContent);
+  document.getElementById('content').innerHTML = html;
+  document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+</script>
+
+</body>
+</html>
