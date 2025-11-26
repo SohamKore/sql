@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Markdown Viewer - Dark + Code Highlighting</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js"></script>
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: #d4d4d4;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    #content {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    pre {
+      background-color: #2d2d2d;
+      border-radius: 6px;
+      padding: 15px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      font-size: 14px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #3c3c3c;
+      margin: 30px 0;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: #ffffff;
+    }
+
+    a {
+      color: #4ea1ff;
+    }
+
+    strong {
+      color: #ffffff;
+    }
+        .custom-cursor {
+
+position: fixed !important;
+pointer-events: none !important;
+z-index: 9999 !important;
+height: 70px !important; /* Adjust the height as needed */
+}
+  </style>
+</head>
+<body>
+
+<div id="content"></div>
+    <script>
+        window.onload = function() {
+            
+       
+                   var cursor = document.createElement('img');
+                   cursor.src = 'https://i.gifer.com/1V94.gif';
+                   cursor.classList.add('custom-cursor');
+             
+             // Add cursor to the document
+             document.body.appendChild(cursor);
+             
+             // Adjust cursor position based on mouse movement
+             document.addEventListener('mousemove', function(e) {
+               console.log(1)
+               var cursorOffsetX = cursor.width / 2;
+               var cursorOffsetY = cursor.height / 2;
+               cursor.style.left = (e.clientX - cursorOffsetX) + 'px';
+               cursor.style.top = (e.clientY - cursorOffsetY) + 'px';
+             }); }
+       
+           </script>
+<script>
+  const markdownContent = `
+
+  
+  # 🌟 SQL Relationships (Super Easy Version)
+  ---
+
+Think of **tables like spreadsheets**.
+SQL relationships describe **how tables connect**.
+
+There are **3 main types**:
+
+---
+
+## 1️⃣ **One-to-One (1:1)**
+
+👉 One row in Table A matches **exactly one** row in Table B.
+
+**Example:**
+
+* One person ↔ one passport
+
+**How it works:**
+One table has a **foreign key** pointing to the other table’s ID.
+
+---
+
+## 2️⃣ **One-to-Many (1:N)** — *the most common*
+
+👉 One row in Table A can match **many** rows in Table B.
+
+**Example:**
+
+* One customer ↔ many orders
+* One teacher ↔ many students
+
+**How it works:**
+The “many” table contains a **foreign key** from the “one” table.
+
+\`\`\`
+Customers (id PK)
+Orders (id PK, customer_id FK)
+\`\`\`
+
+---
+
+## 3️⃣ **Many-to-Many (M:N)**
+
+👉 Many rows in A relate to many rows in B.
+
+**Example:**
+
+* Students ↔ Classes (each student has many classes; each class has many students)
+
+**How it works:**
+You create a **bridge table** to connect them.
+
+\`\`\`
+Students
+Classes
+StudentClasses  <-- bridge (student_id FK, class_id FK)
+\`\`\`
+
+---
+
+# 🌈 Mini Visuals (super simple)
+
+| Relationship | Picture                            |
+| ------------ | ---------------------------------- |
+| One-to-One   | A — 1 → 1 — B                      |
+| One-to-Many  | A — 1 → ∞ — B                      |
+| Many-to-Many | A — ∞ ↔ ∞ — B (via a middle table) |
+
+---
+
+
+
+
+
+`;
+
+  // Render and highlight
+  const html = marked.parse(markdownContent);
+  document.getElementById('content').innerHTML = html;
+  document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+</script>
+
+</body>
+</html>
