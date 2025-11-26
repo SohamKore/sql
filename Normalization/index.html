@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Markdown Viewer - Dark + Code Highlighting</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js"></script>
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: #d4d4d4;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    #content {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    pre {
+      background-color: #2d2d2d;
+      border-radius: 6px;
+      padding: 15px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      font-size: 14px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #3c3c3c;
+      margin: 30px 0;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: #ffffff;
+    }
+
+    a {
+      color: #4ea1ff;
+    }
+
+    strong {
+      color: #ffffff;
+    }
+        .custom-cursor {
+
+position: fixed !important;
+pointer-events: none !important;
+z-index: 9999 !important;
+height: 70px !important; /* Adjust the height as needed */
+}
+  </style>
+</head>
+<body>
+
+<div id="content"></div>
+    <script>
+        window.onload = function() {
+            
+       
+                   var cursor = document.createElement('img');
+                   cursor.src = 'https://i.gifer.com/1V94.gif';
+                   cursor.classList.add('custom-cursor');
+             
+             // Add cursor to the document
+             document.body.appendChild(cursor);
+             
+             // Adjust cursor position based on mouse movement
+             document.addEventListener('mousemove', function(e) {
+               console.log(1)
+               var cursorOffsetX = cursor.width / 2;
+               var cursorOffsetY = cursor.height / 2;
+               cursor.style.left = (e.clientX - cursorOffsetX) + 'px';
+               cursor.style.top = (e.clientY - cursorOffsetY) + 'px';
+             }); }
+       
+           </script>
+<script>
+  const markdownContent = `
+
+
+# 🌟 What is Normalization?
+
+Normalization is just a way to **organize your tables so they don’t have messy, repeated, or confusing data**.
+
+Think of it like **cleaning your room**:
+
+* Don’t put the same item in 10 places.
+* Don’t mix socks with snacks.
+* Make everything neat and easy to find.
+
+---
+
+# 🎯 The 3 Normal Forms
+
+## 1️⃣ **1st Normal Form (1NF)**
+
+💡 *No repeating groups. Each cell has ONE value.*
+
+**Bad example:**
+
+| id | phone_numbers |
+| -- | ------------- |
+| 1  | 123, 456, 789 |
+
+**Why bad:** Multiple values in one cell.
+
+**Fix:** Put phone numbers in another table.
+
+---
+
+## 2️⃣ **2nd Normal Form (2NF)**
+
+💡 *No partial dependencies (if you have a composite key).*
+If you don’t have composite keys → **you’re already in 2NF**.
+
+**Meaning:** Every column depends on the *whole* key, not part of it.
+
+(For beginners: you can mostly skip this until you see composite keys.)
+
+---
+
+## 3️⃣ **3rd Normal Form (3NF)**
+
+💡 *No columns that depend on other columns.*
+Aka: **no “describing something else” columns.**
+
+**Bad example:**
+
+| student_id | major_id | major_name |
+| ---------- | -------- | ---------- |
+
+\`major_name\` depends on \`major_id\`, not on student.
+
+**Fix:**
+Put \`major_name\` in a \`majors\` table.
+
+---
+
+# 🌈 Super Simple Memory Trick
+
+| Form    | Meaning                        | Like…                                         |
+| ------- | ------------------------------ | --------------------------------------------- |
+| **1NF** | No multiple values in one cell | Don’t put 5 socks in 1 shoe                   |
+| **2NF** | Whole key only                 | Don’t label half your boxes                   |
+| **3NF** | No “describing something else” | Don’t store your friend’s info in your wallet |
+
+---
+
+# 🧠 Ultimate One-Sentence Summary
+
+**Normalization = break big messy tables into smaller clean ones so nothing repeats and nothing depends on the wrong thing.**
+
+---
+
+`;
+
+  // Render and highlight
+  const html = marked.parse(markdownContent);
+  document.getElementById('content').innerHTML = html;
+  document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+</script>
+
+</body>
+</html>
