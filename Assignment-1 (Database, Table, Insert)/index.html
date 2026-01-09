@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Markdown Viewer - Dark + Code Highlighting</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js"></script>
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: #d4d4d4;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    #content {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    pre {
+      background-color: #2d2d2d;
+      border-radius: 6px;
+      padding: 15px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      font-size: 14px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #3c3c3c;
+      margin: 30px 0;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: #ffffff;
+    }
+
+    a {
+      color: #4ea1ff;
+    }
+
+    strong {
+      color: #ffffff;
+    }
+        .custom-cursor {
+
+position: fixed !important;
+pointer-events: none !important;
+z-index: 9999 !important;
+height: 70px !important; /* Adjust the height as needed */
+}
+  </style>
+</head>
+<body>
+
+<div id="content"></div>
+    <script>
+        window.onload = function() {
+            
+       
+                   var cursor = document.createElement('img');
+                   cursor.src = 'https://i.gifer.com/1V94.gif';
+                   cursor.classList.add('custom-cursor');
+             
+             // Add cursor to the document
+             document.body.appendChild(cursor);
+             
+             // Adjust cursor position based on mouse movement
+             document.addEventListener('mousemove', function(e) {
+               console.log(1)
+               var cursorOffsetX = cursor.width / 2;
+               var cursorOffsetY = cursor.height / 2;
+               cursor.style.left = (e.clientX - cursorOffsetX) + 'px';
+               cursor.style.top = (e.clientY - cursorOffsetY) + 'px';
+             }); }
+       
+           </script>
+<script>
+  const markdownContent = `
+  ---
+# Assignment 1 - Database, Table, Insert
+---
+
+## ➡️ Question 1: College Database
+
+**Database Name:** \`college\`
+
+### Table: \`students\`
+
+| Column Name | Data Type |
+| ----------- | --------- |
+| sr          | int       |
+| name        | varchar   |
+| marks       | int       |
+
+**Data to be stored:**
+
+* (1, Om, 95)
+* (2, Soham, 88)
+* (3, Riya, 91)
+
+---
+
+## ➡️ Question 2: Company Database
+
+**Database Name:** \`company\`
+
+### Table: \`employees\`
+
+| Column Name | Data Type |
+| ----------- | --------- |
+| emp_id      | int       |
+| emp_name    | varchar   |
+| salary      | int       |
+
+**Data to be stored:**
+
+* (101, Amit, 50000)
+* (102, Neha, 45000)
+* (103, Rahul, 60000)
+
+---
+
+## ➡️ Question 3: Library Database
+
+**Database Name:** \`library\`
+
+### Table: \`books\`
+
+| Column Name | Data Type |
+| ----------- | --------- |
+| book_id     | int       |
+| book_name   | varchar   |
+| price       | int       |
+
+**Data to be stored:**
+
+* (1, DBMS, 350)
+* (2, Operating Systems, 500)
+* (3, Computer Networks, 450)
+
+---
+
+## ➡️ Question 4: School Database
+
+**Database Name:** \`school\`
+
+### Table: \`teachers\`
+
+| Column Name  | Data Type |
+| ------------ | --------- |
+| teacher_id   | int       |
+| teacher_name | varchar   |
+| experience   | int       |
+
+**Data to be stored:**
+
+* (1, Sunita, 10)
+* (2, Rajesh, 7)
+* (3, Anjali, 5)
+
+---
+
+## ➡️ Question 5: Store Database
+
+**Database Name:** \`store\`
+
+### Table: \`products\`
+
+| Column Name  | Data Type |
+| ------------ | --------- |
+| product_id   | int       |
+| product_name | varchar   |
+| quantity     | int       |
+
+**Data to be stored:**
+
+* (201, Pen, 100)
+* (202, Notebook, 50)
+* (203, Pencil, 200)
+
+---
+  `;
+
+  // Render and highlight
+  const html = marked.parse(markdownContent);
+  document.getElementById('content').innerHTML = html;
+  document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+</script>
+
+</body>
+</html>
