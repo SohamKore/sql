@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SQL Assignment - Beginner Practice</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js"></script>
+
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: #d4d4d4;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    #content {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    pre {
+      background-color: #2d2d2d;
+      border-radius: 6px;
+      padding: 15px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      font-size: 14px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #3c3c3c;
+      margin: 30px 0;
+    }
+
+    h1, h2, h3 {
+      color: #ffffff;
+    }
+
+    strong {
+      color: #ffffff;
+    }
+
+    .custom-cursor {
+      position: fixed !important;
+      pointer-events: none !important;
+      z-index: 9999 !important;
+      height: 70px !important;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="content"></div>
+
+<script>
+window.onload = function() {
+  var cursor = document.createElement('img');
+  cursor.src = 'https://i.gifer.com/1V94.gif';
+  cursor.classList.add('custom-cursor');
+
+  document.body.appendChild(cursor);
+
+  document.addEventListener('mousemove', function(e) {
+    var cursorOffsetX = cursor.width / 2;
+    var cursorOffsetY = cursor.height / 2;
+    cursor.style.left = (e.clientX - cursorOffsetX) + 'px';
+    cursor.style.top = (e.clientY - cursorOffsetY) + 'px';
+  });
+}
+</script>
+
+<script>
+const markdownContent = `
+---
+# 📘 SQL Assignment - Insert, Select, Update, Delete
+---
+
+## 🧩 Question 1: Create Database
+
+**Database Name:** \`practice_db\`
+
+---
+
+## 📊 Question 2: Create Tables
+
+### Table: \`students\`
+
+| Column Name | Data Type |
+|------------|----------|
+| name       | varchar  |
+| age        | int      |
+| course     | varchar  |
+| city       | varchar  |
+
+---
+
+### Table: \`courses\`
+
+| Column Name  | Data Type |
+|--------------|----------|
+| course_name  | varchar  |
+| duration     | int      |
+| fee          | int      |
+
+---
+
+## 🧪 Question 3: Insert Data
+
+### Students Data
+
+* (Amit, 20, BCA, Pune)
+* (Neha, 22, BBA, Mumbai)
+* (Rahul, 19, BCA, Delhi)
+* (Sneha, 21, MBA, Pune)
+* (Vikram, 23, BBA, Chennai)
+
+---
+
+### Courses Data
+
+* (BCA, 36, 150000)
+* (BBA, 36, 130000)
+* (MBA, 24, 300000)
+
+---
+
+## 🔹 Question 4: INSERT Practice
+
+1. Add student:
+   * Riya, 20, BCA, Nagpur  
+
+2. Add student:
+   * Karan, 24, MBA, Bangalore  
+
+3. Add course:
+   * MCA, 24, 200000  
+
+---
+
+## 🔹 Question 5: SELECT Practice
+
+1. Show all students  
+2. Show students from Pune  
+3. Show students studying BCA  
+4. Show only name and city  
+5. Show courses with fee more than 150000  
+
+---
+
+## 🔹 Question 6: UPDATE Practice
+
+1. Change city of Amit to Mumbai  
+2. Increase age of Rahul by 1  
+3. Change course of Neha to MBA  
+4. Change fee of BBA to 140000  
+5. Change all Pune students to Pimpri  
+
+---
+
+## 🔹 Question 7: DELETE Practice
+
+1. Delete student Vikram  
+2. Delete students from Delhi  
+3. Delete course MCA  
+4. Delete students older than 22  
+5. Delete all students  
+
+---
+
+## 🎯 Bonus Questions
+
+1. Update all BCA students' age to 21  
+2. Delete all MBA students  
+3. Show students with age > 20  
+4. Show Mumbai students in BBA  
+
+---
+`;
+
+const html = marked.parse(markdownContent);
+document.getElementById('content').innerHTML = html;
+
+document.querySelectorAll('pre code').forEach(block => {
+  hljs.highlightElement(block);
+});
+</script>
+
+</body>
+</html>
