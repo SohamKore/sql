@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MySQL DDL Commands – Practice Assignment</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+
+<style>
+:root{
+  --bg:#fbfaff; --ink:#1f1b4d; --text:#464a73; --muted:#8087ad; --line:#e6e3fa;
+  --v:#7c3aed; --p:#ec4899; --c:#06b6d4; --a:#f59e0b; --ok:#10b981;
+  --grad:linear-gradient(135deg,var(--v),var(--p) 55%,var(--c));
+  --c1:var(--v); --c2:var(--p);
+  --side:272px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.7 Inter,'Segoe UI',sans-serif;overflow-x:hidden}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;color:var(--ink);line-height:1.25;margin:0}
+svg{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+strong{color:var(--ink)}
+a{color:var(--v)}
+:focus-visible{outline:2px solid var(--v);outline-offset:2px}
+
+/* background: orbs + particles */
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.orb{position:fixed;border-radius:50%;filter:blur(70px);opacity:.45;z-index:0;pointer-events:none;animation:float 24s ease-in-out infinite alternate}
+.o1{width:460px;height:460px;background:var(--v);top:-120px;left:8%}
+.o2{width:380px;height:380px;background:var(--p);top:22%;right:-100px;animation-delay:-8s}
+.o3{width:420px;height:420px;background:var(--c);bottom:-140px;left:30%;animation-delay:-14s}
+.o4{width:260px;height:260px;background:var(--a);bottom:18%;right:22%;opacity:.3;animation-delay:-4s}
+@keyframes float{to{transform:translate(70px,-50px) scale(1.15)}}
+
+/* layout */
+#content{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:0 24px 90px}
+@media(min-width:1000px){body{padding-left:var(--side)}}
+
+/* sidebar */
+#side{position:fixed;z-index:60;top:0;left:0;bottom:0;width:var(--side);display:flex;flex-direction:column;
+  background:rgba(255,255,255,.78);backdrop-filter:blur(16px);border-right:1px solid var(--line);box-shadow:8px 0 40px -18px rgba(124,58,237,.35);
+  transition:transform .3s}
+#side .brand{display:flex;gap:12px;align-items:center;padding:20px 18px 16px;border-bottom:1px solid var(--line)}
+#side .brand .logo{width:42px;height:42px;border-radius:13px;background:var(--grad);display:grid;place-items:center;color:#fff;font-size:21px;box-shadow:0 0 22px rgba(236,72,153,.5)}
+#side .brand b{font:600 14px/1.3 Poppins,sans-serif;color:var(--ink)}
+#toc{flex:1;overflow-y:auto;padding:12px 10px}
+#toc .lbl{padding:4px 10px 8px;font-size:12px;color:var(--muted);font-weight:600}
+.ni>a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:11px;color:var(--text);text-decoration:none;font-size:14px;line-height:1.35;transition:.15s}
+.ni>a .ti{width:28px;height:28px;border-radius:9px;background:var(--line);color:var(--muted);display:grid;place-items:center;font-size:15px;transition:.2s}
+.ni>a:hover{background:#f3f0ff}
+.ni.on>a{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 4px 18px -4px var(--g,rgba(124,58,237,.5))}
+.ni.on>a .ti{background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;box-shadow:0 0 14px var(--g,rgba(124,58,237,.6))}
+.sub{display:none;margin:2px 0 6px 24px;padding-left:14px;border-left:2px solid var(--line)}
+.ni.on .sub{display:block}
+.sub a{display:block;padding:3px 8px;font-size:13px;color:var(--muted);text-decoration:none;border-radius:6px}
+.sub a:hover{color:var(--v);background:#f6f3ff}
+#side .sp{padding:14px 18px 18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+#side .sp .bar{height:7px;margin-top:7px;background:var(--line);border-radius:99px;overflow:hidden}
+#side .sp .fill{height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .35s;box-shadow:0 0 10px var(--p)}
+#menu,#top{position:fixed;bottom:20px;z-index:70;width:48px;height:48px;border-radius:50%;border:0;background:var(--grad);color:#fff;font-size:21px;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 26px rgba(236,72,153,.55)}
+#menu{left:18px;display:none}#top{right:18px;display:none}#top.show{display:grid}
+#scrim{position:fixed;inset:0;z-index:55;background:rgba(31,27,77,.35);display:none}
+@media(max-width:999px){
+  #side{transform:translateX(-102%)}body.nav #side{transform:none}body.nav #scrim{display:block}#menu{display:grid}
+}
+
+/* progress */
+#progress{position:sticky;top:0;z-index:50;background:rgba(251,250,255,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+#progress .in{max-width:880px;margin:auto;padding:10px 24px;display:flex;align-items:center;gap:14px;font-size:14px}
+#progress .bar{flex:1;height:9px;background:var(--line);border-radius:99px;overflow:hidden}
+#progress .fill{height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .35s;box-shadow:0 0 12px var(--p)}
+#progress b{color:var(--ink);font-weight:600;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:5px 12px;font:500 13px Inter,sans-serif;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--p);color:var(--p);box-shadow:0 0 14px rgba(236,72,153,.3)}
+
+/* hero */
+.hero{padding:54px 0 26px;animation:rise .7s both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 15px;border-radius:99px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:500;color:var(--v);box-shadow:0 0 20px rgba(124,58,237,.25)}
+.hero .row{display:flex;align-items:center;gap:18px;margin:18px 0 16px}
+.hero .logo{width:66px;height:66px;border-radius:20px;background:var(--grad);display:grid;place-items:center;color:#fff;font-size:32px;box-shadow:0 0 0 6px rgba(236,72,153,.12),0 0 40px rgba(124,58,237,.6)}
+.hero h1{font-size:clamp(28px,5vw,44px);background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{padding:4px 13px;border-radius:99px;background:#fff;border:1px solid var(--line);font-size:13px;color:var(--text);box-shadow:0 2px 12px rgba(6,182,212,.18)}
+
+/* cards */
+.card{background:rgba(255,255,255,.84);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:20px;margin:26px 0;overflow:hidden;
+  box-shadow:0 14px 50px -16px var(--g,rgba(124,58,237,.5)),0 0 0 1px rgba(255,255,255,.7) inset}
+.card>header{display:flex;align-items:center;gap:14px;padding:18px 24px;border-bottom:1px solid var(--line);
+  background:linear-gradient(90deg,color-mix(in srgb,var(--c1) 14%,white),transparent 75%)}
+.card>header .ico{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--c1),var(--c2));display:grid;place-items:center;color:#fff;font-size:21px;box-shadow:0 0 22px var(--g)}
+.card h2{font-size:21px}
+.card .body{padding:22px 24px}
+.card .body>:first-child{margin-top:0}.card .body>:last-child{margin-bottom:0}
+.body p{margin:12px 0}
+.body ul:not(.tasks){padding:0;list-style:none}
+.body ul:not(.tasks)>li{position:relative;padding-left:24px;margin:8px 0}
+.body ul:not(.tasks)>li::before{content:"";position:absolute;left:3px;top:.7em;width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 0 9px var(--c2)}
+h3{font-size:17px;margin:30px 0 14px;padding:7px 14px;border-left:4px solid hsl(var(--h) 85% 60%);background:hsl(var(--h) 100% 96%);border-radius:0 10px 10px 0;color:hsl(var(--h) 60% 32%);box-shadow:0 4px 18px -8px hsl(var(--h) 90% 60%)}
+.card .body>h3:first-child{margin-top:0}
+
+/* code */
+:not(pre)>code{font:500 .86em 'JetBrains Mono',monospace;background:#f1ecff;color:#6d28d9;padding:2px 8px;border-radius:99px}
+.win{margin:16px 0;border-radius:14px;overflow:hidden;background:#12142a;box-shadow:0 14px 40px -12px rgba(124,58,237,.6)}
+.win .top{display:flex;align-items:center;gap:7px;padding:9px 14px;background:#1d2040;border-bottom:1px solid #2b2f58}
+.win .dot{width:11px;height:11px;border-radius:50%}
+.win .lang{margin-left:10px;font:500 12px 'JetBrains Mono',monospace;color:#9aa2d8;flex:1}
+.win .btn{background:#2a2e58;border-color:#3b407a;color:#cfd4ff}
+.win pre{margin:0;padding:16px;overflow-x:auto}
+.win pre code{font:400 14px/1.6 'JetBrains Mono',monospace;background:none;padding:0;color:inherit;border-radius:0}
+.win .hljs{background:transparent;padding:0}
+
+/* tables */
+.tw{overflow-x:auto;margin:16px 0;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 8px 28px -14px rgba(6,182,212,.5)}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th{background:var(--grad);color:#fff;text-align:left;padding:10px 16px;font-weight:600;white-space:nowrap}
+td{padding:9px 16px;border-top:1px solid var(--line)}
+tbody tr:nth-child(even){background:#faf8ff}
+tbody tr:hover{background:#eefbff}
+
+/* checklist */
+.tasks{list-style:none;padding:0;margin:0}
+.task{display:flex;gap:12px;align-items:flex-start;padding:10px 14px;margin:8px 0;border:1px solid var(--line);border-radius:13px;background:#fff;cursor:pointer;transition:.15s}
+.task:hover{border-color:var(--p);box-shadow:0 0 18px -2px rgba(236,72,153,.4)}
+.task input{position:absolute;opacity:0;pointer-events:none}
+.task .box{width:24px;height:24px;margin-top:2px;border:2px solid #c9c5ea;border-radius:7px;display:grid;place-items:center;color:transparent;font-size:15px;transition:.15s}
+.task .num{min-width:24px;margin-top:2px;font:500 13px 'JetBrains Mono',monospace;color:var(--muted)}
+.task .txt{flex:1}
+.task input:checked~.box{background:var(--ok);border-color:var(--ok);color:#fff;box-shadow:0 0 14px rgba(16,185,129,.6)}
+.task input:checked~.txt,.task input:checked~.num{text-decoration:line-through;opacity:.5}
+.task input:focus-visible~.box{outline:2px solid var(--v);outline-offset:2px}
+.reset{margin-top:20px}
+
+/* challenge questions */
+ol.ch{list-style:none;padding:0;margin:0;counter-reset:q}
+ol.ch>li{counter-increment:q;display:flex;gap:14px;align-items:flex-start;margin:12px 0;padding:14px 16px;border:1px solid var(--line);border-radius:15px;background:#fff;cursor:pointer;transition:.15s}
+ol.ch>li:hover{box-shadow:0 0 22px -4px rgba(124,58,237,.45)}
+ol.ch>li::before{content:counter(q);width:36px;height:36px;flex:none;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;display:grid;place-items:center;font:600 15px Poppins,sans-serif;box-shadow:0 0 16px var(--g)}
+ol.ch>li .q{flex:1}
+ol.ch>li .hint{display:block;margin-top:4px;font-size:13px;color:var(--muted)}
+ol.ch>li.done{border-color:var(--ok)}
+ol.ch>li.done::before{background:var(--ok);content:"✓";box-shadow:0 0 16px rgba(16,185,129,.6)}
+ol.ch>li.done .hint{color:var(--ok)}
+
+.custom-cursor{position:fixed;pointer-events:none;z-index:9999;height:70px;transform:translate(-50%,-50%);display:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{
+  body{padding-left:0;background:#fff}#fx,.orb,#side,#menu,#scrim,#progress,#top,.custom-cursor,.btn,.badge{display:none!important}
+  .card,.task,ol.ch>li{box-shadow:none;background:#fff;break-inside:avoid}
+  h1{color:#000;-webkit-text-fill-color:#000}.win{box-shadow:none}.win pre{background:#f6f6f6}
+}
+</style>
+</head>
+<body>
+
+<canvas id="fx"></canvas>
+<i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i><i class="orb o4"></i>
+
+<aside id="side" aria-label="Table of contents">
+  <div class="brand"><div class="logo" id="sLogo"></div><b id="sTitle"></b></div>
+  <nav id="toc"></nav>
+  <div class="sp" id="sp" hidden><span id="spTxt"></span><div class="bar"><div class="fill" id="spFill"></div></div></div>
+</aside>
+<div id="scrim"></div>
+<button id="menu" type="button" aria-label="Open contents"></button>
+
+<div id="progress" hidden><div class="in"><b id="pTxt"></b><div class="bar"><div class="fill" id="pFill"></div></div><b id="pPct"></b><button class="btn" id="pReset" type="button"></button></div></div>
+<div id="content"></div>
+<button id="top" type="button" aria-label="Back to top"></button>
+
+<script>
+const markdownContent = `
+
+# MySQL DDL Commands – Practice Assignment
+
+## 1. Assignment objective
+
+Practice the following MySQL DDL commands using a sample database:
+
+- \`CREATE\` – Create databases and tables.
+- \`DROP\` – Delete databases or tables permanently.
+- \`ALTER TABLE ADD\` – Add new columns.
+- \`ALTER TABLE DROP COLUMN\` – Remove columns.
+- \`ALTER TABLE MODIFY COLUMN\` – Change a column's data type or definition.
+- \`ALTER TABLE RENAME TO\` – Rename a table.
+- \`TRUNCATE\` – Remove all rows from a table while keeping its structure.
+
+## 2. Example database and dataset
+
+You are working as a database administrator for a college. The college wants to maintain student, course, and faculty information.
+
+### Database: \`college_db\`
+
+Create the following three tables.
+
+### Table 1: students
+
+| Column | Data type |
+| --- | --- |
+| student\_id | INT |
+| student\_name | VARCHAR(50) |
+| age | INT |
+| city | VARCHAR(30) |
+| fees | DECIMAL(10,2) |
+
+### Table 2: courses
+
+| Column | Data type |
+| --- | --- |
+| course\_id | INT |
+| course\_name | VARCHAR(50) |
+| duration\_months | INT |
+
+### Table 3: faculty
+
+| Column | Data type |
+| --- | --- |
+| faculty\_id | INT |
+| faculty\_name | VARCHAR(50) |
+| subject | VARCHAR(40) |
+
+## 3. Dataset
+
+Use the following sample records for your practice.
+
+### Students
+
+| student\_id | student\_name | age | city | fees |
+| --- | --- | --- | --- | --- |
+| 101 | Amit | 20 | Pune | 25000.00 |
+| 102 | Priya | 21 | Mumbai | 30000.00 |
+| 103 | Rahul | 19 | Nashik | 22000.00 |
+| 104 | Sneha | 22 | Pune | 28000.00 |
+| 105 | Karan | 20 | Nagpur | 26000.00 |
+
+### Courses
+
+| course\_id | course\_name | duration\_months |
+| --- | --- | --- |
+| 1 | MySQL | 3 |
+| 2 | Python | 4 |
+| 3 | Java | 6 |
+| 4 | Web Development | 5 |
+
+### Faculty
+
+| faculty\_id | faculty\_name | subject |
+| --- | --- | --- |
+| 1 | Neha Sharma | Database |
+| 2 | Rajesh Patil | Python |
+| 3 | Meera Joshi | Java |
+
+## 4. Setup script
+
+Run this SQL script to create the database, tables, and sample data before attempting the questions.
+
+sql
+\`\`\`
+
+CREATE DATABASE college_db;
+
+USE college_db;
+
+CREATE TABLE students (
+    student_id INT,
+    student_name VARCHAR(50),
+    age INT,
+    city VARCHAR(30),
+    fees DECIMAL(10,2)
+);
+
+CREATE TABLE courses (
+    course_id INT,
+    course_name VARCHAR(50),
+    duration_months INT
+);
+
+CREATE TABLE faculty (
+    faculty_id INT,
+    faculty_name VARCHAR(50),
+    subject VARCHAR(40)
+);
+
+INSERT INTO students VALUES
+(101, 'Amit', 20, 'Pune', 25000.00),
+(102, 'Priya', 21, 'Mumbai', 30000.00),
+(103, 'Rahul', 19, 'Nashik', 22000.00),
+(104, 'Sneha', 22, 'Pune', 28000.00),
+(105, 'Karan', 20, 'Nagpur', 26000.00);
+
+INSERT INTO courses VALUES
+(1, 'MySQL', 3),
+(2, 'Python', 4),
+(3, 'Java', 6),
+(4, 'Web Development', 5);
+
+INSERT INTO faculty VALUES
+(1, 'Neha Sharma', 'Database'),
+(2, 'Rajesh Patil', 'Python'),
+(3, 'Meera Joshi', 'Java');
+
+SHOW TABLES;
+
+SELECT * FROM students;
+SELECT * FROM courses;
+SELECT * FROM faculty;
+\`\`\`
+
+## 5. Assignment questions
+
+Write the SQL query for each question. Try to solve them without looking up the syntax.
+
+## Practice checklist
+
+### A. CREATE
+
+[ ]1. Create a database named training\_db.
+
+[ ]2. Select training\_db as the current database.
+
+[ ]3. Create a table named employees with emp\_id (INT), emp\_name (VARCHAR(60)), salary (DECIMAL(10,2)), and department (VARCHAR(40)).
+
+[ ]4. Create a table named departments with dept\_id (INT) and dept\_name (VARCHAR(50)).
+
+### B. ALTER TABLE — ADD
+
+[ ]5. Add an email column of type VARCHAR(100) to the students table.
+
+[ ]6. Add a phone column of type VARCHAR(15) to the students table.
+
+[ ]7. Add a joining\_date column of type DATE to the employees table.
+
+[ ]8. Add a column named experience of type INT to the faculty table.
+
+### C. ALTER TABLE — MODIFY
+
+[ ]9. Change the student\_name column in students from VARCHAR(50) to VARCHAR(100).
+
+[ ]10. Change the city column in students from VARCHAR(30) to VARCHAR(50).
+
+[ ]11. Change the salary column in employees to DECIMAL(12,2).
+
+[ ]12. Change the course\_name column in courses to VARCHAR(100).
+
+### D. ALTER TABLE — DROP COLUMN
+
+[ ]13. Remove the phone column from students.
+
+[ ]14. Remove the experience column from faculty.
+
+[ ]15. Remove the joining\_date column from employees.
+
+[ ]16. Remove the department column from employees.
+
+### E. ALTER TABLE — RENAME TO
+
+[ ]17. Rename the faculty table to teachers.
+
+[ ]18. Rename the courses table to course\_details.
+
+[ ]19. Rename the employees table to staff.
+
+### F. TRUNCATE
+
+[ ]20. Remove all records from the students table while keeping the table structure.
+
+[ ]21. Remove all records from course\_details while keeping the table structure.
+
+[ ]22. Remove all records from teachers while keeping the table structure.
+
+### G. DROP
+
+[ ]23. Delete the departments table permanently.
+
+[ ]24. Delete the staff table permanently.
+
+[ ]25. Delete the training\_db database permanently.
+
+ Reset checklist
+
+## 6\. Challenge questions
+
+These questions test whether you understand how DDL commands affect a database.
+
+1. What is the difference between \`DROP\` and \`TRUNCATE\`?
+2. Can you use \`ALTER TABLE ADD\` to add multiple columns in a single statement?
+3. What happens to the data when you rename a table?
+4. Which command removes a table's structure as well as its data?
+5. How can you check the structure of a table after modifying it?
+
+
+## 7\. Important MySQL notes
+
+- \`DROP TABLE\` removes the table structure and its data.
+- \`TRUNCATE TABLE\` removes all rows but keeps the table structure.
+- \`ALTER TABLE ... MODIFY COLUMN\` changes a column definition.
+- \`ALTER TABLE ... RENAME TO\` changes the table name.
+- \`DESC table_name;\` displays the table structure.
+- \`SHOW TABLES;\` lists tables in the selected database.
+
+
+
+`;
+</script>
+<!-- ============ TEMPLATE ENGINE: do not edit below; only replace markdownContent above ============ -->
+<script>
+(function(){
+const BADGE='Practice Assignment';
+const CURSOR_GIF='https://i.gifer.com/1V94.gif';
+const PALETTE=[['#7c3aed','#ec4899'],['#06b6d4','#3b82f6'],['#f59e0b','#ef4444'],['#10b981','#06b6d4'],['#ec4899','#f59e0b'],['#6366f1','#06b6d4']];
+
+const I=p=>'<svg viewBox="0 0 24 24">'+p+'</svg>';
+const ICON={
+  target:I('<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>'),
+  table:I('<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>'),
+  terminal:I('<path d="m4 17 6-6-6-6M12 19h8"/>'),
+  pencil:I('<path d="M17 3a2.8 2.8 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>'),
+  bulb:I('<path d="M15 14c.2-1 .7-1.7 1.5-2.5A6 6 0 1 0 7.5 11.5c.8.8 1.3 1.5 1.5 2.5M9 18h6M10 22h4"/>'),
+  help:I('<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>'),
+  book:I('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5ZM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>'),
+  db:I('<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5M3 12a9 3 0 0 0 18 0"/>'),
+  check:I('<path d="M20 6 9 17l-5-5" stroke-width="3"/>'),
+  copy:I('<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+  up:I('<path d="m18 15-6-6-6 6"/>'),
+  reset:I('<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>'),
+  menu:I('<path d="M4 6h16M4 12h16M4 18h16"/>')
+};
+const RULES=[[/challenge|quiz/i,'help'],[/object|goal|aim/i,'target'],[/set ?up|script|install|run/i,'terminal'],
+  [/data|example|schema|table/i,'table'],[/question|checklist|practice|exercise|task|assignment/i,'pencil'],[/note|tip|important|remember/i,'bulb']];
+const iconFor=t=>ICON[(RULES.find(r=>r[0].test(t))||[0,'book'])[1]];
+const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const el=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e};
+const clean=t=>t.replace(/\\/g,'');
+
+/* 1. Markdown pre-processing */
+let md=markdownContent
+  .replace(/^[ \t]*(sql|python|bash|sh|js|javascript|html|css|java|php|json|text)[ \t]*\n```[ \t]*\n/gim,'```$1\n')
+  .replace(/^[ \t]*\[([ xX]?)\][ \t]*(?:\d+\.)?[ \t]*(\S.*)$/gm,(m,c,t)=>'- ['+(c.trim()?'x':' ')+'] '+t)
+  .replace(/^(- \[[ x]\] .*)\n\n(?=- \[[ x]\] )/gm,'$1\n');
+
+const root=$('#content');
+root.innerHTML=marked.parse(md);
+
+/* 2. Code blocks */
+$$('pre code',root).forEach(c=>{
+  hljs.highlightElement(c);
+  const pre=c.parentElement;
+  const lang=((c.className.match(/language-(\w+)/)||[])[1]||'code').toUpperCase();
+  const win=el('div','win',
+    '<div class="top"><i class="dot" style="background:#ff5f57"></i><i class="dot" style="background:#febc2e"></i><i class="dot" style="background:#28c840"></i><span class="lang">'+lang+'</span><button class="btn" type="button">'+ICON.copy+'<span>Copy</span></button></div>');
+  pre.replaceWith(win);win.appendChild(pre);
+  const b=$('button',win);
+  b.onclick=async()=>{
+    const txt=c.textContent;
+    try{await navigator.clipboard.writeText(txt)}catch(e){const t=el('textarea');t.value=txt;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}
+    $('span',b).textContent='Copied!';setTimeout(()=>$('span',b).textContent='Copy',1600);
+  };
+});
+
+/* 3. Tables */
+$$('table',root).forEach(t=>{const w=el('div','tw');t.replaceWith(w);w.appendChild(t)});
+
+/* 4. Checklist */
+const store=(()=>{const k='chk:'+($('h1',root)||{textContent:document.title}).textContent.trim();
+  return{get:()=>{try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return[]}},
+         set:v=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}}})();
+const saved=store.get(), boxes=[];
+$$('li > input[type=checkbox]',root).forEach((inp,i)=>{
+  const li=inp.parentElement;inp.remove();
+  li.parentElement.classList.add('tasks');
+  const lab=el('label','task','<input type="checkbox"><span class="box">'+ICON.check+'</span><span class="num">'+(i+1)+'</span><span class="txt">'+li.innerHTML+'</span>');
+  li.innerHTML='';li.appendChild(lab);
+  const cb=$('input',lab);cb.checked=saved.includes(i);cb.onchange=update;boxes.push(cb);
+});
+$$('p',root).forEach(p=>{if(/^reset checklist$/i.test(p.textContent.trim()))p.remove()});
+function update(){
+  const done=boxes.filter(b=>b.checked).length,n=boxes.length,pc=n?Math.round(done/n*100):0;
+  store.set(boxes.map((b,i)=>b.checked?i:-1).filter(i=>i>=0));
+  $('#pTxt').textContent=done+' / '+n+' completed';
+  $('#pPct').textContent=pc+'%';$('#pFill').style.width=pc+'%';
+  $('#spTxt').textContent=done+' of '+n+' tasks done';$('#spFill').style.width=pc+'%';
+}
+function resetAll(){if(confirm('Clear all checked items?')){boxes.forEach(b=>b.checked=false);update()}}
+if(boxes.length){
+  $('#progress').hidden=false;$('#sp').hidden=false;
+  $('#pReset').innerHTML=ICON.reset+'Reset checklist';
+  $('#pReset').onclick=resetAll;update();
+}
+
+/* 5. Hero + section cards */
+const kids=[...root.children];
+root.innerHTML='';
+const h1=kids.find(k=>k.tagName==='H1');
+const title=h1?h1.innerHTML:document.title;
+let card=null,secs=[],h3n=0;
+root.appendChild(el('div','hero','<span class="badge">'+ICON.pencil+BADGE+'</span><div class="row"><div class="logo">'+ICON.db+'</div><h1>'+title+'</h1></div><div class="chips" id="chips"></div>'));
+function mkCard(head){
+  const n=secs.length,pal=PALETTE[n%PALETTE.length];
+  card=el('section','card');card.id='s'+n;
+  card.style.cssText='--c1:'+pal[0]+';--c2:'+pal[1]+';--g:'+pal[0]+'66';
+  card.innerHTML=(head?'<header><span class="ico">'+iconFor(head.textContent)+'</span><h2>'+head.innerHTML+'</h2></header>':'')+'<div class="body"></div>';
+  secs.push({id:card.id,title:head?head.textContent:'Overview',pal,subs:[]});root.appendChild(card);
+}
+kids.forEach(k=>{
+  if(k===h1||k.tagName==='HR')return;
+  if(k.tagName==='H2'){mkCard(k);return}
+  if(!card)mkCard(null);
+  if(k.tagName==='H3'){
+    k.style.setProperty('--h',(265+h3n++*47)%360);
+    const s=secs[secs.length-1];k.id=s.id+'-'+s.subs.length;s.subs.push({id:k.id,title:k.textContent});
+  }
+  $('.body',card).appendChild(k);
+});
+$('#chips').innerHTML=(boxes.length?'<span class="chip">'+boxes.length+' tasks</span>':'')+'<span class="chip">'+secs.length+' sections</span>';
+
+/* 6. Challenge questions */
+$$('.card',root).forEach((c,i)=>{
+  if(!/challenge|quiz/i.test(secs[i].title))return;
+  const ck='ch:'+secs[i].title,sv=(()=>{try{return JSON.parse(localStorage.getItem(ck))||[]}catch(e){return[]}})();
+  const H='Think first, then click to mark as answered';
+  $$('ol',c).forEach(ol=>{ol.classList.add('ch');
+    const items=$$(':scope > li',ol);
+    items.forEach((li,j)=>{
+      li.innerHTML='<div class="q">'+li.innerHTML+'<span class="hint">'+H+'</span></div>';
+      li.tabIndex=0;li.setAttribute('role','button');
+      const set=on=>{li.classList.toggle('done',on);$('.hint',li).textContent=on?'Answered':H};
+      set(sv.includes(j));
+      const tg=()=>{set(!li.classList.contains('done'));
+        try{localStorage.setItem(ck,JSON.stringify(items.map((x,n)=>x.classList.contains('done')?n:-1).filter(n=>n>=0)))}catch(e){}};
+      li.onclick=e=>{if(e.target.tagName!=='CODE')tg()};
+      li.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tg()}};
+    });
+  });
+});
+
+/* 7. Reset button at end of checklist card */
+if(boxes.length){
+  const b=el('button','btn reset',ICON.reset+'Reset checklist');b.type='button';b.onclick=resetAll;
+  $('.body',boxes[boxes.length-1].closest('.card')).appendChild(b);
+}
+
+/* 8. Sidebar navigation */
+$('#sLogo').innerHTML=ICON.db;
+$('#sTitle').textContent=clean(h1?h1.textContent:document.title);
+const toc=$('#toc');toc.appendChild(el('div','lbl','On this page'));
+const items=secs.map(s=>{
+  const d=el('div','ni');d.style.cssText='--c1:'+s.pal[0]+';--c2:'+s.pal[1]+';--g:'+s.pal[0]+'88';
+  d.innerHTML='<a href="#'+s.id+'"><span class="ti">'+iconFor(s.title)+'</span><span>'+clean(s.title)+'</span></a>'+
+    (s.subs.length?'<div class="sub">'+s.subs.map(x=>'<a href="#'+x.id+'">'+clean(x.title)+'</a>').join('')+'</div>':'');
+  toc.appendChild(d);return d;
+});
+const setOn=i=>items.forEach((d,n)=>d.classList.toggle('on',n===i));
+setOn(0);
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){const n=secs.findIndex(s=>s.id===e.target.id);setOn(n);items[n].scrollIntoView({block:'nearest'})}
+}),{rootMargin:'-20% 0px -70% 0px'});
+$$('.card',root).forEach(c=>io.observe(c));
+// mobile drawer
+$('#menu').innerHTML=ICON.menu;
+$('#menu').onclick=()=>document.body.classList.toggle('nav');
+$('#scrim').onclick=()=>document.body.classList.remove('nav');
+toc.addEventListener('click',e=>{if(e.target.closest('a'))document.body.classList.remove('nav')});
+
+/* 9. Back to top */
+const top=$('#top');top.innerHTML=ICON.up;top.onclick=()=>scrollTo({top:0});
+addEventListener('scroll',()=>top.classList.toggle('show',scrollY>400),{passive:true});
+
+/* 10. Particles */
+const cv=$('#fx'),ctx=cv.getContext('2d'),COLS=['#7c3aed','#ec4899','#06b6d4','#f59e0b','#10b981'];
+const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let W,H,P=[],mx=-999,my=-999;
+function size(){
+  const d=devicePixelRatio||1;W=innerWidth;H=innerHeight;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);
+  const n=Math.min(70,Math.round(W*H/20000));
+  P=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,r:1.6+Math.random()*3,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,c:COLS[Math.random()*COLS.length|0],a:.4+Math.random()*.5}));
+}
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  for(const p of P){
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<-10)p.x=W+10;if(p.x>W+10)p.x=-10;if(p.y<-10)p.y=H+10;if(p.y>H+10)p.y=-10;
+    const dx=p.x-mx,dy=p.y-my,d=Math.hypot(dx,dy);if(d<120&&d>0){p.x+=dx/d*1.4;p.y+=dy/d*1.4}
+  }
+  ctx.shadowBlur=0;ctx.lineWidth=1;
+  for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){
+    const d=Math.hypot(P[i].x-P[j].x,P[i].y-P[j].y);
+    if(d<130){ctx.globalAlpha=(1-d/130)*.22;ctx.strokeStyle=P[i].c;ctx.beginPath();ctx.moveTo(P[i].x,P[i].y);ctx.lineTo(P[j].x,P[j].y);ctx.stroke()}
+  }
+  for(const p of P){ctx.globalAlpha=p.a;ctx.shadowColor=p.c;ctx.shadowBlur=16;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fill()}
+  ctx.globalAlpha=1;
+}
+function loop(){if(!document.hidden)draw();requestAnimationFrame(loop)}
+size();addEventListener('resize',size);
+addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+still?draw():loop();
+
+/* 11. Custom cursor (mouse devices only) */
+if(!matchMedia('(hover: none)').matches){
+  const cur=el('img','custom-cursor');cur.src=CURSOR_GIF;cur.alt='';document.body.appendChild(cur);
+  addEventListener('mousemove',e=>{cur.style.display='block';cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
+  document.addEventListener('mouseleave',()=>cur.style.display='none');
+}
+})();
+</script>
+</body>
+</html>
